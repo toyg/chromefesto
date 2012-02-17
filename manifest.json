@@ -1,0 +1,18 @@
+{
+  "name": "ilmanifesto",
+  "version": "2.2.3",
+  "description": "Prima pagina del manifesto.",
+  "browser_action": {
+  	"default title": "il manifesto - prima pagina",
+	"default_icon": "icon.png",
+	"popup": "index.html"
+  },
+  "permissions": [
+    "http://lab.pythonaro.com/",
+    "http://www.ilmanifesto.it/"
+  ],
+  "icons": { "16": "icon.png",
+           "48": "48.png",
+          "128": "128.png" },
+  "options_page": "options.html"
+}

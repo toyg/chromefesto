@@ -1,0 +1,92 @@
+body { 
+	border:0; margin: 0; padding:0; 
+	text-align: center; 
+	background: -webkit-gradient(linear, left bottom, left 50%, from(orange), to(white));
+	font-family: Arial, Helvetica, sans-serif;
+}
+form {	
+	border:0; margin: 0; padding:0; 
+	overflow:hidden;
+	padding: 10px;
+	padding-top: 0px;
+	margin-left:20%;
+	margin-right:20%;
+	margin-top: 20px;
+	background-color: white;
+	-webkit-box-shadow: 3px 3px 10px grey;
+	border-radius: 20px;    
+}
+h1 { 
+	border:0; margin: 0; padding:0;
+	text-align: left;
+	padding: 10px 10px 5px 10px;	
+	font-family: Times New Roman, serif;
+	text-shadow: 2px 2px 2px rgba(255,255,255,0.5);
+}
+ul { 
+	border:0; margin: 0; padding:0; 
+	border: 1px solid orange;
+	border-radius: 5px;
+	margin:5px;
+}
+li { 
+	text-align: left; list-style: none; 
+	border-bottom: solid 1px orange;
+	padding:10px;
+	background: -webkit-gradient(linear, left bottom, left top, from(rgb(255,206,119)), to(white));
+}
+li:first-child {
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+}
+li:last-child {
+	border-bottom: 0;
+}
+
+label {
+	display:block;
+	padding-bottom:5px;
+	font-weight: bold;
+	font-size: large;
+	text-shadow: 2px 2px 2px white;
+}
+label.radiolabel {
+	border:0; margin:0;
+	display: inline;
+	padding-left: 10px;
+	font-weight: normal;
+	font-variant: normal;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: medium;
+}
+input { padding:0; margin:0; }
+#username { width: 300px; padding:5px; }
+#password { width: 300px; padding:5px;}
+#calltoaction {
+	display: block;
+	font-weight: bold;
+	font-family: Times New Roman, serif;
+	font-size: xx-large;
+	margin: 10px 0px 10px 0px;
+}
+#calltoaction ul { 
+	margin-top: 10px;
+	background: -webkit-gradient(linear, left bottom, left top, from(rgb(255,206,119)), to(white));
+	background: white;	
+	box-shadow: 3px 3px 10px grey inset;
+	padding: 5px;
+}
+#calltoaction li { 
+	border:0; margin:0; padding:0; 
+	padding-left: 10px;
+	background: transparent;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: normal;
+	font-size: medium;
+}
+a {
+	font-weight: bold; 
+	color: red;
+}
+
+#footer { text-align: right; margin-top: 10px; font-size: 8pt; margin-left: 20%; margin-right: 20%; }

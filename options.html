@@ -1,0 +1,76 @@
+<html>
+<head><title>ilmanifesto, opzioni.</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="css/options.css" />
+<script type="text/javascript" src="js/options.js"></script>
+</head>
+<body><form name="options"><h1>ilmanifesto, opzioni.</h1>
+<ul id="optionform">
+<li><label for="layout">Layout:</label><span id="span_layout">
+<input type="radio" id="layout_fp" name="layout" value="frontpage" onclick="storeThis(this);"/>
+<label class="radiolabel" for="layout_fp">Solo prima pagina del giorno</label><br />
+<input type="radio" id="layout_week" name="layout" value="week" onclick="storeThis(this);"/>
+<label class="radiolabel" for="layout_week">Prima pagina del giorno e ultimi 6 numeri</label><br />
+<!--
+<input type="radio" id="layout_alias" name="layout" value="alias" />
+<label class="radiolabel" for="layout_alias">Prima pagina dell'ultimo Alias</label><br />
+<input type="radio" id="layout_fpalias" name="layout" value="week" />
+<label class="radiolabel" for="layout_fpalias">Prima pagina del giorno e dell'ultimo Alias</label><br />
+-->
+</span></li>
+<li><label>Abbonato</label><input type="checkbox" id="subscriber_checkbox" name="subscriber" value="subscriber"/><label class="radiolabel" for="subscriber_checkbox" id="subscriber_label">Sono abbonato al manifesto web</label><br />
+<span id="calltoaction">abbonati ora! 
+<ul>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=789">PDF - 10 numeri</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=329">PDF - annuale</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=331">PDF - trimestrale</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=333">PDF - mensile</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=328">PDF+HTML - annuale</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=330">PDF+HTML - trimestrale</a></li>
+<li><a onclick="trackSubs(this);" href="http://store.ilmanifesto.it/index.php?main_page=product_info&products_id=332">PDF+HTML - mensile</a></li>
+<li><a onclick="trackSubs(this);" href="http://abbonarsionline.ilmanifesto.it/abbonarsionline/index.jsp">Cartaceo</a> (non include accesso al sito)</li>
+</ul></span></li>
+<li id="liUser"><label for="username">Username o email:</label><input type="text" id="username" name="username" onchange="storeThis(this);" /></li>
+<li id="liPwd"><label for="password">Password:</label><input type="password" id="password" name="password" onchange="storeThis(this);" /><br />(premi Invio dopo averla inserita)</li>
+<li id="liVersion"><label for="version">Link alla versione:</label><span id="span_version">
+<input type="radio" id="version_pdf" name="version" value="PDF" onclick="storeThis(this);"/><label class="radiolabel" for="version_pdf">PDF</label><br />
+<input type="radio" id="version_html" name="version" value="HTML" onclick="storeThis(this);"/><label class="radiolabel" for="version_html">HTML</label></span>
+</li>
+</ul>
+</form>
+<script type="text/javascript">
+// subscriber
+var subbed = false;
+if(localStorage['subscriber'] == "true"){ subbed = true; }
+document.options.subscriber_checkbox.checked = subbed;
+document.getElementById('subscriber_checkbox').onchange = hideLogin;
+hideLogin();
+
+// text fields
+saving = ['username','password'];
+for (i in saving){
+	var obj = document.options.elements[saving[i]];	
+	if(obj.name != 'password' && localStorage[saving[i]] != null){
+		obj.value = localStorage[saving[i]];
+	}
+}
+
+// radios
+if(localStorage['layout'] == null){ localStorage['layout'] = 'week'; };
+if(localStorage['version'] == null){ localStorage['version'] = 'PDF'; };
+radios = ['layout','version'];
+for(i in radios){ setRadioValue(radios[i],localStorage[radios[i]]); }; 
+ var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-29246309-1']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = 'https://ssl.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();     
+</script>
+
+<div id="footer">"ilmanifesto Extension for Google Chrome" &copy; 2012 <a href="mailto:g.lacava@gmail.com">Giacomo Lacava</a>.<br />"il manifesto" &copy; 2012 il manifesto coop. editrice a r.l., tutti i diritti riservati (all rights reserved).</div> 
+</body>
+</html>

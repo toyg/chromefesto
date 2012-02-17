@@ -1,0 +1,196 @@
+<!DOCTYPE HTML> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="css/index.css" />
+<script language="javascript">
+function makeLoading(){
+	pg = document.getElementById('pages');
+	pg.innerHTML = ""; //clean up
+	newImg = document.createElement("img");
+	newImg.setAttribute('src','img/ajax-loader.gif');
+	pg.appendChild(newImg);
+}
+
+function getCallToAction(){
+	var url = 'http://www.ilmanifesto.it/abbonamenti/';
+	var callToAction = document.createElement('div');
+	var a = document.createElement('a');
+	a.setAttribute('href',url);
+	a.appendChild(document.createTextNode('sostieni il manifesto: abbónati!'));
+	a.onclick = function(){
+		_gaq.push(['_trackEvent', 'Abbonamenti', 'frontpage', 'frontpage', 1 ]);
+		chrome.tabs.create({'url':url });
+		window.close();
+	}
+	callToAction.appendChild(a);
+	callToAction.setAttribute('class','callToAction');
+	return callToAction;
+}
+
+function launchLink(url, linkDate){
+	if( localStorage['subscriber'] == "true" && localStorage['username'] != null && localStorage['password'] != null){
+		makeLoading();
+		_gaq.push(['_trackEvent', 'NumeroSingolo', localStorage['version'], linkDate  ]);
+		params = {
+			'user': localStorage['username'],
+			'pass': localStorage['password'],
+			'logintype': 'login',
+			'pid': '2',
+			'redirect_url': 'lettore/loggato/',
+			'tx_felogin_pi1[noredirect]': '0',
+			'tx_rlmpextdbauth_uid': '1',
+			'x': '7',
+			'y': '16'
+		}
+		paramString = ""
+		for(key in params){
+			paramString += encodeURIComponent(key) + "=" + encodeURIComponent(params[key]) + "&";
+		}
+	
+		var http = new XMLHttpRequest();
+	
+		var loginUrl = "http://www.ilmanifesto.it/area-abbonati/";
+		http.open("POST", loginUrl, true);
+		//Send the proper header information along with the request
+		http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		http.onreadystatechange = function() {//Call a function when the state changes.
+			if(http.readyState == 4){
+				if(
+					(http.status == 200 && http.responseText.match('<a id="esci"')) ||
+					http.status == 302 
+				){ // all ok
+					chrome.tabs.create({'url':url });
+					window.close();
+				}else {
+					alert("Username/password errati, controlla le Opzioni dell'extension. Verrai ora rediretto alla normale pagina di login.");
+					chrome.tabs.create({'url':"http://www.ilmanifesto.it/area-abbonati"});
+					window.close();
+				}
+			}
+		}
+		http.send(paramString);
+	} else {
+    	    	_gaq.push(['_trackEvent', 'Non-Abbonati', linkDate ]);
+		chrome.tabs.create({'url':url });
+	}
+}
+
+function getOverlay(isSmall){
+	var span = document.createElement('span');
+	var img = document.createElement('img');
+	var cl, src, size;
+	if (isSmall){
+		cl = 'overlaySmall';
+		src = 'img/overlaySmall.png';
+		size = 30;
+	} else {
+		cl = 'overlay';
+		src = 'img/overlay.png';
+		size = 101;
+	}
+	span.setAttribute('class',cl);
+	img.setAttribute('src',src);
+	img.setAttribute('alt','Scarica in formato PDF');
+	img.setAttribute('width',size);
+	img.setAttribute('height',size);
+	span.appendChild(img);
+	return span;
+}
+
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "http://lab.pythonaro.com/ifesto/rss2.json", true);
+xhr.onreadystatechange = function() {
+  if (xhr.readyState == 4) {
+    var resp = JSON.parse(xhr.responseText);
+    var items = resp['rss']['channel']['items'];
+    var pg = document.getElementById('pages');
+    var divs = []
+    for (i = 0; i < 3; i++){
+    	    divs[i] = document.createElement('div');
+    	    divs[i].setAttribute('class','thumb');
+    	    pg.appendChild(divs[i]);    	    
+    }
+    // layout option
+    if (localStorage['layout'] == 'frontpage'){
+    	    for(var i = 1; i < divs.length; i++){ 
+    	    	    divs[i].style.cssText= 'visibility:hidden; display: none;';
+    	    }
+    	    divs[0].style.cssText = 'border:0; padding:0; margin:0;';
+    }
+    for (item in items){ 
+    	    var div;
+    	    if (item == 0){
+    	    	    div = divs[0];
+    	    } else if (item < 4) {
+    	    	    div = divs[1];
+    	    } else if (item < 7) {
+    	    	    div = divs[2];
+    	    }
+    	    
+    	    var a = document.createElement('a');
+    	    
+    	    // abbonati
+    	    var link = items[item]['link'];
+    	    var linkDate = items[item]['enclosure']['url'].slice(-12,-4);
+    	    if(localStorage['subscriber'] == "true"){
+    	    	    if(localStorage['version'] == "PDF"){
+			    link = "http://www.ilmanifesto.it/area-abbonati/edizione-nazionale/manip1f1/";
+			    link += linkDate // date
+			    link += "nazionale.PDF/manip1c1/Quotidianopdf/manip1a1/show/";
+		    } else if (localStorage['version'] == "HTML"){
+		    	    link = "http://www.ilmanifesto.it/area-abbonati/in-edicola/manip2n1/" + linkDate +"/";
+		    }
+    	    }
+    	    a.setAttribute('href',link);
+    	    a.onclick = function(){
+    	    	    launchLink(this.getAttribute('href'), linkDate);
+    	    }
+    	    var img = document.createElement('img');
+    	    a.appendChild(img);
+    	    if (item == 0){ // frontpage
+    	    	    img.setAttribute('width','420');
+    	    	    var overlay;
+    	    	    // don't append the overlay if subscriber with html option
+    	    	    if (!(localStorage['subscriber'] == "true" && localStorage['version'] == "HTML")){
+    	    	    	    overlay = getOverlay(false)
+    	    	    	    a.appendChild(overlay);
+    	    	    }
+    	    	    
+    	    	    // campaign
+    	    	    if(localStorage['subscriber'] != "true"){
+    	    	    	    div.appendChild(getCallToAction());
+    	    	    	    if(overlay != "null"){
+    	    	    	    	    overlay.style.cssText += "top:27px;";
+    	    	    	    }
+    	    	    }
+    	    	    
+    	    } else { // other issues
+    	    	    img.setAttribute('width','130');
+    	    	    if (!(localStorage['subscriber'] == "true" && localStorage['version'] == "HTML")){
+    	    	    	    a.appendChild(getOverlay(true));
+    	    	    }
+    	    }
+    	    img.setAttribute('src', items[item]['enclosure']['url']);
+    	    div.appendChild(a);
+    }
+    
+  }
+}
+xhr.send();
+
+ var _gaq = _gaq || [];
+     _gaq.push(['_setAccount', 'UA-29246309-1']);
+     _gaq.push(['_trackPageview']);
+
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = 'https://ssl.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+
+</script>
+</head>
+<body>
+<div id="pages"></div>
+</body>
+</html>
